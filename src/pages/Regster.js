@@ -1,58 +1,74 @@
+
+
 import { useState } from "react";
 import axios from 'axios'
 import{useNavigate} from 'react-router-dom';
  
+
+import React from 'react';
 import "../index.css"
-export default function Regster() {
 
-  
-    let Navigate = useNavigate();
-    const [data, setData]= useState({
-        id:"",
-        name:"",
-        pass:""
-    })
 
-    const handleChange=(e)=>{
-        setData({ ...data, [e.target.name]: e.target.value});
-
-        //console.log(data)
+class Regster extends React.Component {
+  constructor(props)
+    {
+      super(props);
+      this.addFormData = this.addFormData.bind(this);
+    }
+  addFormData(evt)
+    {
+      evt.preventDefault();
+      const fd = new FormData();
+      fd.append('id', this.refs.id.value);
+      fd.append('email', this.refs.email.value);
+      fd.append('name', this.refs.name.value);
+      fd.append('pass', this.refs.pass.value);
+     
+      
+      axios.post('http://localhost/doame/src/php/Register.php', fd
+      ).then(res=>
+      {
+       
+         window.location.replace("/attend");
+    this.myFormRef.reset();
+    
+    }
+    );
     }
 
-    const submitForm=(event)=>{
-      event.preventDefault();
-       const sendData ={
-            id:data.id,
-            name:data.name,
-            pass:data.pass
+  render() {
 
+    return (
+<div>
+<nav class="flex border-b border-gray-100 text-sm font-medium">
+  <a href="home"class="-mb-px border-b border-transparent p-4 hover:text-cyan-500">
+    Home
+  </a>
 
-        }
-                console.log(sendData)
+  <a href="about" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500">
+    About
+  </a>
 
-              axios.post('http://localhost/doame/src/php/insert.php',sendData)
-               .then((result)=>{
-                if (result.data.Status=="invalid"){
-                alert('invalid user');}
-                else {
-                Navigate('/login');
-            }
-               })
+  <a href="contact" class="-mb-px border-b border-transparent p-4 hover:text-cyan-500">
+    contact us
+  </a>
 
-    }
-  return <div>
+  <a href="regster" class="-mb-px border-b border-current p-4 text-cyan-500">
+  register
+  </a>
+</nav>
 <section class="relative flex flex-wrap lg:h-screen lg:items-center">
   <div class="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
     <div class="mx-auto max-w-lg text-center">
-      <h1 class="text-2xl font-bold sm:text-3xl">Contact With Me</h1>
+      <h1 class="text-2xl font-bold sm:text-3xl">Register</h1>
 
     
     </div>
 
-    <form onSubmit={submitForm}  class="mx-auto mt-8 mb-0 max-w-md space-y-4">
+    <form ref={(el) => this.myFormRef = el}  class="mx-auto mt-8 mb-0 max-w-md space-y-4">
      
     <div>
-        <label for="id" class="sr-only">National Number</label>
+        <label for="id" class="sr-only">ID</label>
 
         <div class="relative">
           <input
@@ -60,7 +76,24 @@ export default function Regster() {
             type="number"
             class="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
             placeholder="Enter National Number"
-            onChange={handleChange} value={data.id}
+            ref="id"
+          />
+
+       
+        </div>
+      </div>
+      
+      <div>
+        <label for="email" class="sr-only">Email</label>
+
+        <div class="relative">
+          <input
+          name="email"
+            type="email"
+            class="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
+            placeholder="Enter Email"
+            ref="email"
+            required
           />
 
        
@@ -75,8 +108,8 @@ export default function Regster() {
             type="text"
             class="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
             placeholder="Enter name"
-            onChange={handleChange} value={data.name}
-
+            ref="name"
+required
           />
 
        
@@ -91,17 +124,16 @@ export default function Regster() {
           type="password"
             class="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
             placeholder="Enter Password"
-            onChange={handleChange} value={data.pass}
-
+            ref="pass"
+required
           />
 
         </div>
     
       <div class="flex items-center justify-between">
       
-
+      <button type="submit" class="ml-3 inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white" onClick={this.addFormData}>Register</button>
         
-                            <input type="submit" name="submit" value="Register" class="ml-3 inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white" />
 
          
           
@@ -119,4 +151,8 @@ export default function Regster() {
   </div>
 </section>
 </div>
+
+ )
+};
 }
+export default Regster;
